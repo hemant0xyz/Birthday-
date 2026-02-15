@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Happy Birthday Bro</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #text {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 70px;
+            color: white;
+            text-align: center;
+            text-shadow: 0 0 20px cyan, 0 0 40px blue;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #sub {
+            font-size: 30px;
+            margin-top: 20px;
+            color: lightgray;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div id="text">
+    🎉 HAPPY BIRTHDAY BRO 🎉
+    <div id="sub">Wishing you success, power & happiness 🚀</div>
+</div>
+
+<audio autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // 4K Canvas Setup
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 3840;
+    canvas.height = 2160;
+
+    let particles = [];
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function createFirework() {
+        let x = random(0, canvas.width);
+        let y = random(0, canvas.height / 2);
+
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: x,
+                y: y,
+                dx: random(-4, 4),
+                dy: random(-4, 4),
+                life: 100,
+                color: `hsl(${random(0,360)},100%,50%)`
+            });
+        }
+    }
+
+    function animate() {
+        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((p, index) => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.dx;
+            p.y += p.dy;
+            p.life--;
+
+            if (p.life <= 0) {
+                particles.splice(index, 1);
+            }
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    setInterval(createFirework, 800);
+    animate();
+
+    // Moving text (cannot be clicked)
+    const text = document.getElementById("text");
+
+    text.addEventListener("mouseover", () => {
+        text.style.left = random(10, 90) + "%";
+        text.style.top = random(10, 80) + "%";
+    });
+
+</script>
+
+</body>
+</html>
